@@ -92,6 +92,10 @@ class graphite {
         DocumentRoot "/opt/graphite/webapp"
         ErrorLog /opt/graphite/storage/log/webapp/error.log
         CustomLog /opt/graphite/storage/log/webapp/access.log common
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, OPTIONS, POST"
+        Header set Access-Control-Allow-Headers "origin, authorization, accept"
+
 
         <Location "/">
                 SetHandler python-program
@@ -120,10 +124,17 @@ class graphite {
     notify => Service["apache2"],
     require => Package["apache2"],
   }
+ 
+  file { "/etc/apache2/mods-enabled/headers.load":
+    ensure => "link",
+    target => "/etc/apache2/mods-available/headers.load",
+    require => Package['apache2'],
+  }
+
 
   service { "apache2" :
     ensure => "running",
-    require => [ File["/opt/graphite/storage/log/webapp/"], File["/opt/graphite/storage/graphite.db"] ],
+    require => [ File["/opt/graphite/storage/log/webapp/"], File["/opt/graphite/storage/graphite.db"], File["/etc/apache2/mods-enabled/headers.load"]],
   }
 
   package {

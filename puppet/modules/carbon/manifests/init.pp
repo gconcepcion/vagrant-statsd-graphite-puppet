@@ -60,4 +60,6 @@ class carbon {
    require => Exec[unpack-carbon],
    creates => "/opt/graphite/bin/carbon-cache.py",
   }
+
+
 }

@@ -33,7 +33,6 @@ Pin-Priority: 550
 ",
     ensure => present,
 }
-
 include carbon
 include statsd
 include graph-explorer
